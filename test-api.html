@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba TheSportsDB API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        h1 { color: #ff6b35; }
+        .loading { color: #4ecdc4; }
+        .error { color: #ff6b6b; }
+        .match-card {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b35;
+        }
+        .live { border-left-color: #4ecdc4; }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-live { background: #4ecdc4; color: #000; }
+        .status-finished { background: #666; }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover { background: #e55a2a; }
+    </style>
+</head>
+<body>
+    <h1>🏆 Prueba de TheSportsDB API</h1>
+    <button onclick="fetchEvents()">🔄 Cargar Eventos del Día</button>
+    <div id="status" class="loading">Haz clic en el botón para cargar eventos...</div>
+    <div id="events"></div>
+
+    <script>
+        async function fetchEvents() {
+            const statusDiv = document.getElementById('status');
+            const eventsDiv = document.getElementById('events');
+            
+            statusDiv.innerHTML = '⏳ Cargando eventos...';
+            statusDiv.className = 'loading';
+            eventsDiv.innerHTML = '';
+
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const url = `https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${today}`;
+                
+                console.log('Fetching from:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log('Response:', data);
+                
+                if (data.events && data.events.length > 0) {
+                    statusDiv.innerHTML = `✅ ${data.events.length} eventos encontrados`;
+                    statusDiv.className = '';
+                    
+                    // Mostrar solo los primeros 20 eventos
+                    data.events.slice(0, 20).forEach(event => {
+                        const matchDiv = document.createElement('div');
+                        matchDiv.className = 'match-card' + (event.strStatus === 'Match Finished' ? '' : ' live');
+                        
+                        const status = event.strStatus === 'Match Finished' ? 
+                            '<span class="status status-finished">Finalizado</span>' : 
+                            '<span class="status status-live">En vivo</span>';
+                        
+                        matchDiv.innerHTML = `
+                            <div>
+                                ${status}
+                                <strong>${event.strSport}</strong> - ${event.strLeague}
+                            </div>
+                            <div style="font-size: 18px; margin: 10px 0;">
+                                ${event.strHomeTeam} <strong>${event.intHomeScore || 0}</strong> - 
+                                <strong>${event.intAwayScore || 0}</strong> ${event.strAwayTeam}
+                            </div>
+                            <div style="font-size: 14px; color: #888;">
+                                📅 ${event.strDate} | ⏰ ${event.strTime} | 📍 ${event.strVenue || 'N/A'}
+                            </div>
+                        `;
+                        
+                        eventsDiv.appendChild(matchDiv);
+                    });
+                } else {
+                    statusDiv.innerHTML = '⚠️ No se encontraron eventos para hoy';
+                    statusDiv.className = '';
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.innerHTML = `❌ Error: ${error.message}`;
+                statusDiv.className = 'error';
+            }
+        }
+
+        // Cargar automáticamente al iniciar
+        // fetchEvents();
+    </script>
+</body>
+</html>
