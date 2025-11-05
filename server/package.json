@@ -1,0 +1,26 @@
+{
+  "name": "la-china-sports-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=.env index.js",
+    "start": "node --env-file=.env index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "seed": "node --env-file=.env prisma/seed.js",
+    "fix:prisma": "node scripts/fix-prisma.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.15"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
+
+

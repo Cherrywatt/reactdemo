@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { CircleDot, ArrowLeft, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { registerUser } from "@/lib/auth";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validaciones básicas
@@ -67,16 +68,13 @@ const Register = () => {
       return;
     }
 
-    // Aquí puedes agregar la lógica para guardar en la base de datos
-    toast({
-      title: "¡Registro exitoso!",
-      description: "Tu cuenta ha sido creada. Funcionalidad de BD pendiente.",
-    });
-
-    // Opcional: Redirigir al login después del registro
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
+    try {
+      await registerUser({ name: formData.name, email: formData.email, password: formData.password });
+      toast({ title: "¡Registro exitoso!", description: "Tu cuenta ha sido creada." });
+      setTimeout(() => navigate("/"), 800);
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "No se pudo registrar", variant: "destructive" });
+    }
   };
 
   return (

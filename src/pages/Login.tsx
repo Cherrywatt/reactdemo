@@ -6,32 +6,29 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleDot, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { loginUser } from "@/lib/auth";
+import { useAuth } from "@/hooks/use-auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { refresh } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Aquí puedes agregar la lógica de autenticación con tu base de datos
-    // Por ahora, solo mostramos un mensaje
-    if (email && password) {
-      toast({
-        title: "Inicio de sesión",
-        description: "Funcionalidad de base de datos pendiente de implementar",
-      });
-      
-      // Puedes navegar de vuelta a la página principal después del login
-      // navigate("/");
-    } else {
-      toast({
-        title: "Error",
-        description: "Por favor completa todos los campos",
-        variant: "destructive",
-      });
+    if (!email || !password) {
+      toast({ title: "Error", description: "Por favor completa todos los campos", variant: "destructive" });
+      return;
+    }
+    try {
+      const user = await loginUser({ email, password });
+      await refresh();
+      toast({ title: "Sesión iniciada", description: "Bienvenido" });
+      navigate("/");
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "Credenciales inválidas", variant: "destructive" });
     }
   };
 
@@ -94,12 +91,13 @@ const Login = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <a
-                  href="#"
+                <button
+                  type="button"
+                  onClick={() => navigate('/forgot')}
                   className="text-sm text-primary hover:text-primary-glow transition-colors"
                 >
                   ¿Olvidaste tu contraseña?
-                </a>
+                </button>
               </div>
 
               <Button
