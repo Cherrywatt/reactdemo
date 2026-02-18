@@ -40,17 +40,6 @@ Aplicación web para mostrar eventos deportivos en vivo con un panel de administ
 - Node.js 18 o superior.
 - Acceso a Internet para instalar dependencias y, opcionalmente, un servidor SMTP (Mailtrap, Gmail con contraseña de aplicación, SendGrid u otro proveedor).
 
-## Puesta en marcha en desarrollo
-
-1. Instalar dependencias del frontend en la carpeta raíz del proyecto.
-2. Iniciar el frontend en el puerto 8080.
-3. Entrar a la carpeta del backend (server), instalar dependencias y generar cliente de Prisma.
-4. Ejecutar la migración para crear la base de datos SQLite.
-5. Iniciar el backend en el puerto 3001.
-6. Abrir el navegador en la dirección local del frontend y probar login/registro.
-
-Las URLs por defecto son: frontend en http://localhost:8080 y backend en http://localhost:3001. El proxy del frontend enruta las peticiones que empiezan por /api al backend.
-
 ## Variables de entorno del backend (server/.env)
 
 - Conexión a base de datos SQLite: ruta del archivo (ya preconfigurada). 
