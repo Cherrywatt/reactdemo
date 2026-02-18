@@ -76,20 +76,6 @@ Las URLs por defecto son: frontend en http://localhost:8080 y backend en http://
 - Prisma gestiona el esquema y las migraciones. Al cambiar el modelo, se debe generar una nueva migración y aplicarla para mantener la base de datos sincronizada.
 - Para desarrollo, la base de datos SQLite se guarda en un archivo dentro de la carpeta del backend. Es portátil junto con el proyecto, aunque no se recomienda versionarlo.
 
-## Preparación para subir a GitHub y mover a otra PC
-
-1. Inicializa un repositorio Git en la carpeta raíz del proyecto si aún no está inicializado.
-2. Asegúrate de tener un archivo de ignorados adecuado para no incluir dependencias ni archivos sensibles (por ejemplo, node_modules, la base SQLite y el archivo .env del backend).
-3. Realiza un primer commit con todos los archivos del proyecto.
-4. Crea un repositorio remoto en tu proveedor (GitHub) y enlázalo con el repositorio local.
-5. Sube tu rama principal al remoto.
-6. En la otra PC, clona el repositorio remoto en una carpeta de trabajo.
-7. Instala dependencias tanto del frontend (carpeta raíz) como del backend (carpeta server).
-8. Crea el archivo de variables de entorno en el backend (.env) con los parámetros apropiados en la nueva máquina.
-9. Ejecuta las migraciones del backend para crear/actualizar la base de datos y levanta ambos servidores.
-
-Consejo: no incluyas el archivo .env ni la base de datos en el control de versiones. Documenta internamente los valores necesarios para cada entorno (desarrollo, pruebas y producción) y utiliza gestores de secretos o variables de entorno del sistema.
-
 ## Soporte y mantenimiento
 
 - Verifica periódicamente las dependencias para aplicar actualizaciones y parches de seguridad.
